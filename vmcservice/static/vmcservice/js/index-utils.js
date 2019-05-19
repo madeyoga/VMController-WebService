@@ -1,3 +1,7 @@
+/**
+ * get all vms from database.
+ * gonna delete this soon.
+ */
 function getAllVm() {
     $.ajax({
         url: 'http://localhost:8000/vmc/ajax/vms',
@@ -19,4 +23,42 @@ function getAllVm() {
     });
 }
 
-getAllVm();
+/**
+ * 
+ * @param {*} status On, Off, Suspend.
+ */
+function power(status) {
+
+}
+
+function powerOn() {
+    $.ajax({
+        url: 'http://localhost:8000/vmc/ajax/vmpower/on/',
+        dataType: 'json',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+        success: function (data) {
+            document.getElementById('vm-stat').innerHTML = 'On';
+            document.getElementById('vm-stat').onclick = powerOff;
+            console.log('return data', data);
+        }
+    });
+    document.getElementById('vm-stat').onclick = null;
+}
+
+function powerOff() {
+    $.ajax({
+        url: 'http://localhost:8000/vmc/ajax/vmpower/off/',
+        dataType: 'json',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+        success: function (data) {
+            document.getElementById('vm-stat').innerHTML = 'Off';
+            document.getElementById('vm-stat').onclick = powerOn;
+            console.log('return data', data);
+        }
+    });
+    document.getElementById('vm-stat').onclick = null;
+}

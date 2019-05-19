@@ -5,7 +5,15 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     </head>
     <body>
-        <h1 id='vms'></h1>
+        {% for vm in vms %}
+        <select id='select-vm'>
+            <option value='{{vm.vmx_path}}'>{{vm.name}}-{{vm.username}}</option>
+        </select>
+        <h1 id='vm{{vm.id}}'>{{vm.name}} {{vm.vmx_path}} </h1>
+        Status: <h2 id='vm-stat' onclick="powerOn()">{{vm.status}}</h2>
+        {% endfor %}
+
+        <a href="/vmc/logout/">Logout</a>
 
         {% load staticfiles %}
         <script src="{% static 'vmcservice/js/index-utils.js' %}"></script>
