@@ -2,20 +2,29 @@
     <head>
         <title>test</title>
 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+         <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'vmcservice/css/index.css' %}">
     </head>
     <body>
-        {% for vm in vms %}
-        <select id='select-vm'>
-            <option value='{{vm.vmx_path}}'>{{vm.name}}-{{vm.username}}</option>
-        </select>
-        <h1 id='vm{{vm.id}}'>{{vm.name}} {{vm.vmx_path}} </h1>
-        Status: <h2 id='vm-stat' onclick="powerOn()">{{vm.status}}</h2>
-        {% endfor %}
+        <div class='container'>
+            {% for vm in vms %}
+            <div id='vm-{{vm.id}}' class="card card-body mt-2 mb-2">
+                <h4>{{vm.name}}</h4>
+                <div>vmx-path : {{vm.vmx_path}}</div>
+                <div>Status: <span id='vm-stat-{{vm.id}}' class='status-text' onclick="powerVM('{{vm.id}}', this.innerHTML)">{{vm.status}}</span></div> 
+            </div>
+            {% endfor %}
+        </div>
 
         <a href="/vmc/logout/">Logout</a>
 
-        {% load staticfiles %}
         <script src="{% static 'vmcservice/js/index-utils.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     </body>
 </html>

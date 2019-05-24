@@ -27,38 +27,62 @@ function getAllVm() {
  * 
  * @param {*} status On, Off, Suspend.
  */
-function power(status) {
-
-}
-
-function powerOn() {
+function powerVM(id, status) {
+    console.log(id, status);
+    if (status == 'on') {
+        status = 'off';
+    } 
+    else {
+        status = 'on';
+    }
     $.ajax({
-        url: 'http://localhost:8000/vmc/ajax/vmpower/on/',
+        url: 'http://localhost:8000/vmc/ajax/vmpower/' + id + '/' + status,
         dataType: 'json',
         headers: {
             'Access-Control-Allow-Origin': '*',
         },
         success: function (data) {
-            document.getElementById('vm-stat').innerHTML = 'On';
-            document.getElementById('vm-stat').onclick = powerOff;
-            console.log('return data', data);
+            if (data.returncode == 0) {
+                document.getElementById('vm-stat-' + data.vmid).innerHTML = data.status;
+                if (data.status == 'on') {
+                    var suspendButtonElement = document.createElement('button');
+                    suspendButtonElement.innerHTML = "suspend";
+                    suspendButtonElement.id = "suspend-" + data.vmid;
+                    suspendButtonElement.onclick = function() {
+                        this.parentNode.removeChild(this);
+                        suspendVM(data.vmid);
+                    };
+                    document.getElementById('vm-' + data.vmid).appendChild(suspendButtonElement);
+                }
+                else {
+                    document.getElementById('suspend-' + data.vmid).remove();
+                }
+            } 
+            else {
+                alert("Failed to turn " + data.status + " " + data.vmname)
+            }
+            console.log('return data ', data);
         }
     });
-    document.getElementById('vm-stat').onclick = null;
+    document.getElementById('vm-stat-' + id).innerHTML = "";
 }
 
-function powerOff() {
+function suspendVM(id) {
     $.ajax({
-        url: 'http://localhost:8000/vmc/ajax/vmpower/off/',
+        url: 'http://localhost:8000/vmc/ajax/vmpower/' + id + '/suspend',
         dataType: 'json',
         headers: {
             'Access-Control-Allow-Origin': '*',
         },
         success: function (data) {
-            document.getElementById('vm-stat').innerHTML = 'Off';
-            document.getElementById('vm-stat').onclick = powerOn;
-            console.log('return data', data);
+            if (data.returncode == 0) {
+                document.getElementById('vm-stat-' + data.vmid).innerHTML = data.status;
+            } 
+            else {
+                alert("Failed to " + data.status + " " + data.vmname)
+            }
+            console.log('return data ', data);
         }
     });
-    document.getElementById('vm-stat').onclick = null;
+    document.getElementById('vm-stat-' + id).innerHTML = "";
 }
