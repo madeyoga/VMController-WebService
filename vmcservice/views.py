@@ -12,6 +12,11 @@ import json
 
 @login_required(login_url='/vmc/login/')
 def index(request):
+    """
+    VMC homepage.
+    lists all vms that the user have.
+    """
+
     vms = VirtualMachine.objects.filter(user=request.user)
     vms_dictionary = {
         'vms' : vms
@@ -43,25 +48,30 @@ def virtual_machines(request):
     data = serializers.serialize('json', VirtualMachine.objects.all())
     return HttpResponse(data, content_type='application/json')
 
-def vmpower(request, key):
+def vmpower(request, vm_id, todo):
     """
     Views to update vm status.
     url: localhost:8000/vmc/ajax/vms
     """
 
-    print(key)
-    vm = VirtualMachine.objects.get(user=request.user)
+    print(vm_id + " " + todo)
+    vm = VirtualMachine.objects.get(id=vm_id, user=request.user)
     args = [
         'G:\\Kuliah\\github\\VMControlWebService\\vmcservice\\GuestOps\\Debug\\Power.exe',
-        key, vm.vmx_path
+        todo, vm.vmx_path
         ]
     # output = subprocess.check_output(args)
     output = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     print(output.returncode, output.stdout, output.stderr)
     data = {
+        'vmid'   : vm.id,
+        'vmname'     : vm.name,
         'returncode' : output.returncode,
         'stdout' : output.stdout,
         'stderr' : output.stderr,
-        'status' : 'OK'
+        'status' : todo
     }
+    if output.returncode == 0:
+        vm.status = todo
+        vm.save()
     return HttpResponse(json.dumps(data), content_type='application/json')

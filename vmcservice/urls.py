@@ -8,5 +8,5 @@ urlpatterns = [
     path('ajax/vms', views.virtual_machines, name='vmcvms'),
     path('login/', views.login_view, name='vmclogin'),
     url(r'^logout/$', views.logout_view, name='vmclogout'),
-    url(r'^ajax/vmpower/(?P<key>\D+)/$', views.vmpower, name='vmcvmpower'),
+    url(r'^ajax/vmpower/(?P<vm_id>\d+)/(?P<todo>\D+)$', views.vmpower, name='vmcvmpower'),
 ]
