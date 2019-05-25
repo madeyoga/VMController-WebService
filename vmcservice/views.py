@@ -41,7 +41,7 @@ def logout_view(request):
 
 def virtual_machines(request):
     """
-    Views to returns all vms from ajax request.
+    Views to handle ajax request, to response with all vms data.
     url: localhost:8000/vmc/ajax/vms
     """
 
@@ -50,8 +50,8 @@ def virtual_machines(request):
 
 def vmpower(request, vm_id, todo):
     """
-    Views to update vm status.
-    url: localhost:8000/vmc/ajax/vms
+    Views to power a virtual machine & update virtual machine status.
+    url: localhost:8000/vmc/ajax/vmpower/<vm-id>/<command>
     """
 
     print(vm_id + " " + todo)
@@ -60,9 +60,13 @@ def vmpower(request, vm_id, todo):
         'G:\\Kuliah\\github\\VMControlWebService\\vmcservice\\GuestOps\\Debug\\Power.exe',
         todo, vm.vmx_path
         ]
-    # output = subprocess.check_output(args)
     output = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     print(output.returncode, output.stdout, output.stderr)
+    if output.returncode == 0:
+        # Update virtual machine status in database
+        vm.status = todo
+        vm.save()
+
     data = {
         'vmid'   : vm.id,
         'vmname'     : vm.name,
@@ -71,7 +75,60 @@ def vmpower(request, vm_id, todo):
         'stderr' : output.stderr,
         'status' : todo
     }
-    if output.returncode == 0:
-        vm.status = todo
-        vm.save()
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def clone(request, vm_id, todo, clone_name):
+    """
+    views to clone a virtual machine.
+    url: localhost:8000/vmc/ajax/clone/<vm-id>/[linked|full]/<vm-clone-name>
+    """
+
+    vm = VirtualMachine.objects.get(id=vm_id, user=request.user)
+    args = [
+        'G:\\Kuliah\\github\\VMControlWebService\\vmcservice\\GuestOps\\Debug\\Clone.exe',
+        todo, vm.vmx_path, clone_name
+        ]
+    output = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    print(output.returncode, output.stdout, output.stderr)
+    if output.returncode == 1:
+        # Insert new cloned vm data to database.
+        # ...
+        print("Cloned vm{}".format(vm_id))
+
+    data = {
+        'vmid'   : vm.id,
+        'vmname'     : vm.name,
+        'returncode' : output.returncode,
+        'stdout' : output.stdout,
+        'stderr' : output.stderr,
+        'status' : todo
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+def delete(request, vm_id):
+    """
+    views to delete a virtual machine
+    url: localhost:8000/vmc/ajax/delete/<vm-id>
+    """
+
+    vm = VirtualMachine.objects.get(id=vm_id, user=request.user)
+    args = [
+        'G:\\Kuliah\\github\\VMControlWebService\\vmcservice\\GuestOps\\Debug\\Clone.exe',
+        "DELETE", vm.vmx_path
+        ]
+    output = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    print(output.returncode, output.stdout, output.stderr)
+    if output.returncode == 1:
+        # Remove vm data from database.
+        # ...
+        print("Deleted vm{}".format(vm_id))
+    
+    data = {
+        'vmid'   : vm.id,
+        'vmname'     : vm.name,
+        'returncode' : output.returncode,
+        'stdout' : output.stdout,
+        'stderr' : output.stderr,
+        'status' : todo
+    }
     return HttpResponse(json.dumps(data), content_type='application/json')
