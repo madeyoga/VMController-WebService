@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuestOps", "GuestOps\GuestO
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Power", "Power\Power.vcxproj", "{A6C254B7-36CD-4E48-A0B4-4F4CC493F643}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Clone", "Clone\Clone.vcxproj", "{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{A6C254B7-36CD-4E48-A0B4-4F4CC493F643}.Release|x64.Build.0 = Release|x64
 		{A6C254B7-36CD-4E48-A0B4-4F4CC493F643}.Release|x86.ActiveCfg = Release|Win32
 		{A6C254B7-36CD-4E48-A0B4-4F4CC493F643}.Release|x86.Build.0 = Release|Win32
+		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Debug|x64.ActiveCfg = Debug|x64
+		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Debug|x64.Build.0 = Debug|x64
+		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Debug|x86.ActiveCfg = Debug|Win32
+		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Debug|x86.Build.0 = Debug|Win32
+		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Release|x64.ActiveCfg = Release|x64
+		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Release|x64.Build.0 = Release|x64
+		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Release|x86.ActiveCfg = Release|Win32
+		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
