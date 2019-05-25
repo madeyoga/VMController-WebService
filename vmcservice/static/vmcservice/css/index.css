@@ -10,6 +10,25 @@
     background-color: skyblue;
 }
 
+.card-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.card-status {
+    font-size: 32px;
+    font-style: italic;
+    color: skyblue;
+}
+
+.card-body:hover {
+    background-color: lightgray;
+}
+
+.card-body:active {
+    background-color: lightgray;
+}
+
 .status-text {
     color: blue;
 }

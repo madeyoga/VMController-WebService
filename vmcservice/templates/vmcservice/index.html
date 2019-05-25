@@ -9,12 +9,73 @@
         <link rel="stylesheet" href="{% static 'vmcservice/css/index.css' %}">
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">VMC</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <!-- <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Options</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Power VM
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Turn on all</a>
+                                <a class="dropdown-item" href="#">Turn off all</a>
+                                <a class="dropdown-item" href="#">Suspend all</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Turn off all Online</a>
+                                <a class="dropdown-item" href="#">Suspend all Online</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Turn on all Offline</a>
+                                <a class="dropdown-item" href="#">Suspend all Offline</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Turn on all Suspended</a>
+                                <a class="dropdown-item" href="#">Turn off all Suspended</a>
+                            </div>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link disabled" href="#">Disabled</a>
+                        </li> -->
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
         <div class='container'>
             {% for vm in vms %}
             <div id='vm-{{vm.id}}' class="card card-body mt-2 mb-2">
-                <h4>{{vm.name}}</h4>
+                <div>
+                    <span class='card-title'>{{vm.name}} </span>
+                    <span class='card-status float-right'> {{vm.status}} </span>
+                </div>
                 <div>vmx-path : {{vm.vmx_path}}</div>
-                <div>Status: <span id='vm-stat-{{vm.id}}' class='status-text' onclick="powerVM('{{vm.id}}', this.innerHTML)">{{vm.status}}</span></div> 
+                <div>
+                    Status: <span id='vm-stat-{{vm.id}}' class='status-text' onclick="powerVM('{{vm.id}}', this.innerHTML)">{{vm.status}}</span>
+                </div> 
+                <div>
+                    Created at: 
+                </div>
+                <div>
+                    Online since: 
+                </div>
+                <div class='float-right'>
+                    <span class='status-text float-right'>Full-Clone</span> 
+                    <span class='float-right mr-1 ml-1'> | </span> 
+                    <span class='status-text float-right'>Linked-Clone</span>
+                </div>
             </div>
             {% endfor %}
         </div>

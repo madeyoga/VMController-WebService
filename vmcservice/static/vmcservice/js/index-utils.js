@@ -25,7 +25,7 @@ function getAllVm() {
 
 /**
  * 
- * @param {*} status On, Off, Suspend.
+ * @param {*} status <on/off/suspend>.
  */
 function powerVM(id, status) {
     console.log(id, status);
@@ -66,7 +66,11 @@ function powerVM(id, status) {
     });
     document.getElementById('vm-stat-' + id).innerHTML = "";
 }
-
+/**
+ * 
+ * @param {*} id 
+ * suspend a virtual machine from a given virtual-machine-id.
+ */
 function suspendVM(id) {
     $.ajax({
         url: 'http://localhost:8000/vmc/ajax/vmpower/' + id + '/suspend',
