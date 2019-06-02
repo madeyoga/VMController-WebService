@@ -70,212 +70,133 @@ static char *progname;
 
 static void usage()
 {
-	fprintf(stderr, "Usage: %s <vmxpath>\n", progname);
+	fprintf(stderr, "Usage: %s <user> <pass> <vmx-path> <interpreter> <script-text>\n", progname);
 	fprintf(stderr, "%s\n", VMXPATH_INFO);
 }
 
 int main(int argc, char **argv)
 {
 	char       *vmpath;
+	char	   *interpreter;
+	char	   *scripttext;
+	char	   *user, *pass;
 	VixError    err;
 	VixHandle   hostHandle = VIX_INVALID_HANDLE;
 	VixHandle   jobHandle = VIX_INVALID_HANDLE;
 	VixHandle   vmHandle = VIX_INVALID_HANDLE;
 
 	progname = argv[0];
-	if (argc > 1) {
-		vmpath = argv[1];
+	if (argc > 1) 
+	{
+		user = argv[1];
+		pass = argv[2];
+		vmpath = argv[3];
+		if (strcmp(argv[4], "python") == 0)
+		{
+			interpreter = "/usr/bin/python3";
+		}
+		else if (strcmp(argv[4], "perl") == 0)
+		{
+			interpreter = "/usr/bin/perl";
+		}
+		else if (strcmp(argv[4], "bash") == 0)
+		{
+			interpreter = "/usr/bin/bash";
+		}
+		else
+		{
+			printf("Interpreter Error unknown %s\n", argv[4]);
+			exit(EXIT_FAILURE);
+		}
+		scripttext = argv[5];
 	}
-	else {
+	else 
+	{
 		usage();
 		exit(EXIT_FAILURE);
 	}
 
 	jobHandle = VixHost_Connect(VIX_API_VERSION,          // api version
-		CONNTYPE,                 // connection type
-		HOSTNAME,                 // host name
-		HOSTPORT,                 // host port
-		USERNAME,                 // username
-		PASSWORD,                 // passwd
-		0,                        // options
-		VIX_INVALID_HANDLE,       // property list handle
-		NULL,                     // callback
-		NULL);                    // client data
+								CONNTYPE,                 // connection type
+								HOSTNAME,                 // host name
+								HOSTPORT,                 // host port
+								USERNAME,                 // username
+								PASSWORD,                 // passwd
+								0,                        // options
+								VIX_INVALID_HANDLE,       // property list handle
+								NULL,                     // callback
+								NULL);                    // client data
 
 	err = VixJob_Wait(jobHandle, VIX_PROPERTY_JOB_RESULT_HANDLE,
 		&hostHandle, VIX_PROPERTY_NONE);
 	Vix_ReleaseHandle(jobHandle);
-	if (VIX_FAILED(err)) {
+	if (VIX_FAILED(err)) 
+	{
 		fprintf(stderr, "failed to connect to host (%"FMT64"d %s)\n", err,
 			Vix_GetErrorText(err, NULL));
 		goto abort;
 	}
-	printf("connected to host (%d)\n", hostHandle);
+	//printf("connected to host (%d)\n", hostHandle);
 
-	printf("about to open %s\n", vmpath);
-	jobHandle = VixVM_Open(hostHandle,               // host connection
-		vmpath,                   // path to vmx
-		NULL,                     // callback
-		NULL);                    // client data
+	//printf("about to open %s\n", vmpath);
+	jobHandle = VixVM_Open( hostHandle,               // host connection
+							vmpath,                   // path to vmx
+							NULL,                     // callback
+							NULL);                    // client data
 	err = VixJob_Wait(jobHandle, VIX_PROPERTY_JOB_RESULT_HANDLE,
 		&vmHandle, VIX_PROPERTY_NONE);
 	Vix_ReleaseHandle(jobHandle);
-	if (VIX_FAILED(err)) {
+	if (VIX_FAILED(err)) 
+	{
 		fprintf(stderr, "failed to open virtual machine '%s'(%"FMT64"d %s)\n", vmpath, err,
 			Vix_GetErrorText(err, NULL));
 		goto abort;
 	}
-	printf("opened %s (%d)\n", vmpath, vmHandle);
+	//printf("opened %s (%d)\n", vmpath, vmHandle);
 
-	printf("powering on\n");
-	jobHandle = VixVM_PowerOn(vmHandle,                 // vm handle
-		VMPOWEROPTIONS,           // options
-		VIX_INVALID_HANDLE,       // property list
-		NULL,                     // callback
-		NULL);                    // client data
+	jobHandle = VixVM_LoginInGuest( vmHandle,
+									user,					  // guest OS user
+									pass,					  // guest OS passwd
+									0,                        // options
+									NULL,                     // callback
+									NULL);                    // client data
 	err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
 	Vix_ReleaseHandle(jobHandle);
-	if (VIX_FAILED(err)) {
-		fprintf(stderr, "failed to power on virtual machine (%"FMT64"d %s)\n", err,
-			Vix_GetErrorText(err, NULL));
-		goto abort;
-	}
-	printf("powered on\n");
-
-	printf("waiting for tools\n");
-	jobHandle = VixVM_WaitForToolsInGuest(vmHandle,
-		TOOLS_TIMEOUT,     // timeout in secs
-		NULL,              // callback
-		NULL);             // client data
-	err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
-	Vix_ReleaseHandle(jobHandle);
-	if (VIX_FAILED(err)) {
-		fprintf(stderr, "failed to wait for tools in virtual machine (%"FMT64"d %s)\n", err,
-			Vix_GetErrorText(err, NULL));
-		goto abort;
-	}
-	printf("tools up\n");
-
-	jobHandle = VixVM_LoginInGuest(vmHandle,
-		GUEST_USERNAME,           // guest OS user
-		GUEST_PASSWORD,           // guest OS passwd
-		0,                        // options
-		NULL,                     // callback
-		NULL);                    // client data
-	err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
-	Vix_ReleaseHandle(jobHandle);
-	if (VIX_FAILED(err)) {
+	if (VIX_FAILED(err)) 
+	{
 		fprintf(stderr, "failed to login to virtual machine '%s'(%"FMT64"d %s)\n", vmpath, err,
 			Vix_GetErrorText(err, NULL));
 		goto abort;
 	}
 	printf("logged in to guest\n");
 
-	printf("about to do work\n");
-	const char *scripttext =
-		// "helloworld.py";
-		"#!/usr/bin/python3\n"
-		"with open('/home/hnp/test.txt', 'w') as file:\n"
-		"   file.write('Hello world')";
 	printf(scripttext);
 	// Run the target program.
-	jobHandle = VixVM_RunScriptInGuest(vmHandle,
-			// "C:\\Users\\owner\\AppData\\Local\\Programs\\Python\\Python36\\python.exe",
-			"/usr/bin/python3",
-			scripttext,
-			0, // options,
-			VIX_INVALID_HANDLE, // propertyListHandle,
-			NULL, // callbackProc,
-			NULL); // clientData
+	jobHandle = VixVM_RunScriptInGuest( vmHandle,
+										interpreter,
+										scripttext,
+										0, // options,
+										VIX_INVALID_HANDLE, // propertyListHandle,
+										NULL, // callbackProc,
+										NULL); // clientData
 
 	err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
 
-	if (VIX_OK != err) {
+	if (VIX_OK != err) 
+	{
 		// Handle the error...
 		fprintf(stderr, "\nfailed to run script in virtual machine '%s'(%"FMT64"d %s)\n", vmpath, err,
 			Vix_GetErrorText(err, NULL));
 		goto abort;
 	} 
-	else {
+	else 
+	{
 		printf("\nRun script successful.\n");
 	}
-	//printf("about to do work\n");
-	//jobHandle = VixVM_RunProgramInGuest(vmHandle,
-	//	"/usr/bin/python3",                // command
-	//	" ~/helloworld.py",   // cmd args
-	//	0,                        // options
-	//	VIX_INVALID_HANDLE,       // prop handle
-	//	NULL,                     // callback
-	//	NULL);                    // client data
-	//err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
-	//Vix_ReleaseHandle(jobHandle);
-	//if (VIX_FAILED(err)) {
-	//	fprintf(stderr, "failed to run program in virtual machine '%s'(%"FMT64"d %s)\n",
-	//		vmpath, err, Vix_GetErrorText(err, NULL));
-	//	goto abort;
-	//}
-	//printf("about to do work\n");
-	//jobHandle = VixVM_RunProgramInGuest(vmHandle,
-	//	"/bin/ls",                // command
-	//	" /bin > /tmp/outfile",   // cmd args
-	//	0,                        // options
-	//	VIX_INVALID_HANDLE,       // prop handle
-	//	NULL,                     // callback
-	//	NULL);                    // client data
-	//err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
-	//Vix_ReleaseHandle(jobHandle);
-	//if (VIX_FAILED(err)) {
-	//	fprintf(stderr, "failed to run program in virtual machine '%s'(%"FMT64"d %s)\n",
-	//		vmpath, err, Vix_GetErrorText(err, NULL));
-	//	goto abort;
-	//}
-
-	//printf("about to do work\n");
-	//jobHandle = VixVM_RunProgramInGuest(vmHandle,
-	//	"/bin/touch",                // command
-	//	" ~/a.txt && echo 'hello world, itsss' > ~/a.txt",   // cmd args
-	//	0,                        // options
-	//	VIX_INVALID_HANDLE,       // prop handle
-	//	NULL,                     // callback
-	//	NULL);                    // client data
-	//err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
-	//Vix_ReleaseHandle(jobHandle);
-	//if (VIX_FAILED(err)) {
-	//	fprintf(stderr, "failed to run program in virtual machine '%s'(%"FMT64"d %s)\n",
-	//		vmpath, err, Vix_GetErrorText(err, NULL));
-	//	goto abort;
-	//}
-
-	//jobHandle = VixVM_CopyFileFromGuestToHost(vmHandle,
-	//	"/tmp/outfile",     // src file
-	//	DEST_FILE,          // dst file
-	//	0,                  // options
-	//	VIX_INVALID_HANDLE, // prop list
-	//	NULL,               // callback
-	//	NULL);              // client data
-	//err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
-	//Vix_ReleaseHandle(jobHandle);
-	//if (VIX_FAILED(err)) {
-	//	fprintf(stderr, "failed to copy file to the host '%s'(%"FMT64"d %s)\n",
-	//		vmpath, err, Vix_GetErrorText(err, NULL));
-	//	goto abort;
-	//}
-
-	//jobHandle = VixVM_DeleteFileInGuest(vmHandle,
-	//	"/tmp/outfile",           // filepath
-	//	NULL,                     // callback
-	//	NULL);                    // client data
-	//err = VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
-	//Vix_ReleaseHandle(jobHandle);
-	//if (VIX_FAILED(err)) {
-	//	fprintf(stderr, "failed to delete file in virtual machine '%s'(%"FMT64"d %s)\n",
-	//		vmpath, err, Vix_GetErrorText(err, NULL));
-	//	goto abort;
-	//}
-
+	return 0;
 abort:
 	Vix_ReleaseHandle(vmHandle);
 	VixHost_Disconnect(hostHandle);
 
-	return 0;
+	return 1;
 }

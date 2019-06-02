@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuestOps", "GuestOps\GuestOps.vcxproj", "{1C91BD0C-4603-4403-AA5D-4155D1DC101F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunScript", "GuestOps\GuestOps.vcxproj", "{1C91BD0C-4603-4403-AA5D-4155D1DC101F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Power", "Power\Power.vcxproj", "{A6C254B7-36CD-4E48-A0B4-4F4CC493F643}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Clone", "Clone\Clone.vcxproj", "{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Info", "Info\Info.vcxproj", "{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Release|x64.Build.0 = Release|x64
 		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Release|x86.ActiveCfg = Release|Win32
 		{48CBD960-FB1A-4DDE-AF87-537DF774FF1B}.Release|x86.Build.0 = Release|Win32
+		{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}.Debug|x64.ActiveCfg = Debug|x64
+		{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}.Debug|x64.Build.0 = Debug|x64
+		{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}.Debug|x86.ActiveCfg = Debug|Win32
+		{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}.Debug|x86.Build.0 = Debug|Win32
+		{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}.Release|x64.ActiveCfg = Release|x64
+		{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}.Release|x64.Build.0 = Release|x64
+		{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}.Release|x86.ActiveCfg = Release|Win32
+		{DA0BF35A-CBF7-4BFA-B871-FE7E178E8CDA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

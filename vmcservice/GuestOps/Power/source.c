@@ -182,13 +182,13 @@ int main(int argc, char **argv)
 	{
 		usage();
 	}
-
+	return 0;
 abort:
 	Vix_ReleaseHandle(jobHandle);
 	Vix_ReleaseHandle(vmHandle);
 
 	VixHost_Disconnect(hostHandle);
 
-	return 0;
+	return 1;
 }
 
