@@ -215,7 +215,7 @@ int main(int argc, char **argv)
 
 	jobHandle = VixVM_CopyFileFromGuestToHost(vmHandle,
 		"/tmp/mem.txt",     // src file
-		".\\mem.txt",          // dst file
+		"vmcservice/GuestOps/Debug/mem.txt",          // dst file
 		0,                  // options
 		VIX_INVALID_HANDLE, // prop list
 		NULL,               // callback
@@ -231,7 +231,7 @@ int main(int argc, char **argv)
 
 	jobHandle = VixVM_CopyFileFromGuestToHost(vmHandle,
 		"/tmp/disk.txt",     // src file
-		".\\disk1.txt",          // dst file
+		"vmcservice/GuestOps/Debug/disk1.txt",          // dst file
 		0,                  // options
 		VIX_INVALID_HANDLE, // prop list
 		NULL,               // callback
@@ -247,7 +247,7 @@ int main(int argc, char **argv)
 
 	jobHandle = VixVM_CopyFileFromGuestToHost(vmHandle,
 		"/tmp/ipadd.txt",     // src file
-		".\\ipadd.txt",          // dst file
+		"vmcservice/GuestOps/Debug/ipadd.txt",          // dst file
 		0,                  // options
 		VIX_INVALID_HANDLE, // prop list
 		NULL,               // callback
