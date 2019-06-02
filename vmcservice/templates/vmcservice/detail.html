@@ -8,6 +8,9 @@
 	
 	{% load staticfiles %}
 	<link rel="stylesheet" href="{% static 'vmcservice/css/styles.css' %}">
+
+	<link rel='stylesheet' href="{% static 'vmcservice/css/prism.css' %}">
+
 </head>
 <body>
 
@@ -28,124 +31,135 @@
 			<a class="navbar-brand" href="#">
 				Administrator
 			</a>
+			<a class="navbar-brand" href="/vmc/">
+				Home
+			</a>
 		</div>
-
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">      
-			<form class="navbar-form navbar-left" method="GET" role="search">
-				<div class="form-group">
-					<input type="text" name="q" class="form-control" placeholder="Search">
+	</div>
+	<!-- /.container-fluid -->
+</nav>  	
+<div class="container-fluid main-container">
+	<div class='container'>
+		<div class="content">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2>{{vm.name}}</h2>
 				</div>
-				<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
-			</form>
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="http://www.pingpong-labs.com" target="_blank">Visit Site</a></li>
-				<li class="dropdown ">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-						Account
-						<span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
-							<li class="dropdown-header">SETTINGS</li>
-							<li class=""><a href="#">Other Link</a></li>
-							<li class=""><a href="#">Other Link</a></li>
-							<li class=""><a href="#">Other Link</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Logout</a></li>
-						</ul>
-					</li>
-				</ul>
-			</div><!-- /.navbar-collapse -->
-		</div><!-- /.container-fluid -->
-	</nav>  	<div class="container-fluid main-container">
-  		<div class="col-md-2 sidebar">
-  			<div class="row">
-	<!-- uncomment code for absolute positioning tweek see top comment in css -->
-	<div class="absolute-wrapper"> </div>
-	<!-- Menu -->
-	<div class="side-menu">
-		<nav class="navbar navbar-default" role="navigation">
-			<!-- Main Menu -->
-			<div class="side-menu-container">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="#"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
-					<li><a href="#"><span class="glyphicon glyphicon-plane"></span> Active Link</a></li>
-					<li><a href="#"><span class="glyphicon glyphicon-cloud"></span> Link</a></li>
-
-					<!-- Dropdown-->
-					<li class="panel panel-default" id="dropdown">
-						<a data-toggle="collapse" href="#dropdown-lvl1">
-							<span class="glyphicon glyphicon-user"></span> Sub Level <span class="caret"></span>
-						</a>
-
-						<!-- Dropdown level 1 -->
-						<div id="dropdown-lvl1" class="panel-collapse collapse">
-							<div class="panel-body">
-								<ul class="nav navbar-nav">
-									<li><a href="#">Link</a></li>
-									<li><a href="#">Link</a></li>
-									<li><a href="#">Link</a></li>
-
-									<!-- Dropdown level 2 -->
-									<li class="panel panel-default" id="dropdown">
-										<a data-toggle="collapse" href="#dropdown-lvl2">
-											<span class="glyphicon glyphicon-off"></span> Sub Level <span class="caret"></span>
-										</a>
-										<div id="dropdown-lvl2" class="panel-collapse collapse">
-											<div class="panel-body">
-												<ul class="nav navbar-nav">
-													<li><a href="#">Link</a></li>
-													<li><a href="#">Link</a></li>
-													<li><a href="#">Link</a></li>
-												</ul>
-											</div>
-										</div>
-									</li>
-								</ul>
+				<div class="panel-body">
+					<!-- <h1>{{vm.name}}</h1> -->
+					<div class="form-group row">
+						<label for="id" class="col-sm-2 col-form-label">VM Number</label>
+						<div class="col-sm-8">
+							<label for="id" id='vm-number'>{{vm.id}}</label>
+						</div>
+						<div class='col-sm-2'>
+							<button id='refreshButton' onclick="getInfo('{{vm.id}}')">Refresh</button>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="ipAddress" class="col-sm-2 col-form-label">Ip Address</label>
+						<div class="col-sm-10">
+							<label id='ipAddress' for="ipAddress" >-</label>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="username" class="col-sm-2 col-form-label">Username</label>
+						<div class="col-sm-10">
+							<label for="username" >{{vm.username}}</label>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="password" class="col-sm-2 col-form-label">Password</label>
+						<div class="col-sm-10">
+							<input id='password-field' type='password' for="password" value='{{vm.password}}' disabled>
+							<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="status" class="col-sm-2 col-form-label">Status</label>
+						<div class="col-sm-10">
+						<label for="status" >{{vm.status}}</label>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="os" class="col-sm-2 col-form-label">Operating System</label>
+						<div class="col-sm-10">
+						<label for="os" >Ubuntu Server 18.04.2 LTS</label>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label id='memo-label' for="memo" class="col-sm-12 col-form-label">Memory Usage</label>
+						<div class="col-sm-5">
+							<div class="progress">
+								<!-- success < 50%, warning < 80%, danger else -->
+								<div id='memo-usage' class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+									100%
+								</div>
 							</div>
 						</div>
-					</li>
-
-					<li><a href="#"><span class="glyphicon glyphicon-signal"></span> Link</a></li>
-
-				</ul>
-			</div><!-- /.navbar-collapse -->
-		</nav>
-
+					</div>
+					<div class="form-group row">
+						<label id='disk-label' for="disk" class="col-sm-12 col-form-label">Disk Space Usage</label>
+						<div class="col-sm-5">
+							<div class="progress">
+								<!-- success < 50%, warning < 80%, danger else -->
+								<div id='disk-usage' class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+									100%
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="content">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Run Script
+				</div>
+				<div class="panel-body">
+					<!-- <form action="/vmc/ajax/runscript/{{vm.id}}" method="get"> -->
+						{% csrf_token %}
+						<div class="form-group row">
+							<label for="staticEmail" class="col-sm-2 col-form-label">WARNING!</label>
+							<div class="col-sm-10">
+							<label for="staticEmail" >WE ARE ONLY ACCEPTING FILES WITH THE .py .pl .sh EXTENSION. ANY OTHER FILE TYPE WILL BE REJECTED</label>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="Interpreter" class="col-sm-2 col-form-label">Select Interpreter</label>
+							<div class="col-sm-10">
+								<select onchange="changeLang(this)">
+									<option value='python' selected>Python</option>
+									<option value='perl'>Perl</option>
+									<option value='bash'>Bash</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="inputFile" class="col-sm-2 col-form-label">File</label>
+							<div class="col-sm-10">
+								<input type="file" name="fileToUpload" id="inputFile" accept=".py, .pl, .sh" required>
+							</div>
+						</div>
+						<button class="btn btn-primary" onclick="runScript('{{vm.id}}')">Run Script</button>
+						<h3>Preview</h3>
+						<pre><code id='code-block' class='language-py' name='code'></code></pre>
+					<!-- </form> -->
+				</div>
+			</div>
+		</div>
 	</div>
-</div>  		</div>
-  		<div class="col-md-10 content">
-  			  <div class="panel panel-default">
-	<div class="panel-heading">
-		Run Script
-	</div>
-	<div class="panel-body">
-		<form action="uploadScript.php" method="post" enctype="multipart/form-data">
-		  <div class="form-group row">
-		    <label for="staticEmail" class="col-sm-2 col-form-label">WARNING!</label>
-		    <div class="col-sm-10">
-		      <label for="staticEmail" >WE ARE ONLY ACCEPTING FILES WITH THE .py .pl .sh EXTENSION. ANY OTHER FILE TYPE WILL BE REJECTED</label>
-		    </div>
-		  </div>
-		  <div class="form-group row">
-		    <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-		    <div class="col-sm-10">
-		      <input type="file" name="fileToUpload" id="fileToUpload" required>
-		    </div>
-		  </div>
-		  
-		  <button type="submit" class="btn btn-primary">Submit</button>
-		</form>
-	</div>
+	<footer class="pull-left footer">
+		<p class="col-md-12">
+			<hr class="divider">
+			Copyright &COPY; 2015 <a href="http://www.pingpong-labs.com">Gravitano</a>
+		</p>
+	</footer>
 </div>
-  		</div>
-  		<footer class="pull-left footer">
-  			<p class="col-md-12">
-  				<hr class="divider">
-  				Copyright &COPY; 2015 <a href="http://www.pingpong-labs.com">Gravitano</a>
-  			</p>
-  		</footer>
-  	</div>
 
+	<script src="{% static 'vmcservice/js/prism.js' %}" data-manual></script>
+	<script src="{% static 'vmcservice/js/detail.js' %}"></script>
   	<script>
   		$(document).ready(function(){
   			$(function(){
@@ -161,7 +175,9 @@
 			  		$('.search-input').focus();
 			  	});
 		    });
-  		});
-  	</script>
+		  });
+		  // GANTI METHOD RESPONSE JANGAN KE FILE. PAKAI PRINTF + REGEX. BIAR MENINGKATKAN PERFORMA.
+		getInfo('{{vm.id}}');
+	  </script>
 </body>
 </html>
