@@ -4,7 +4,7 @@
  */
 function getAllVm() {
     $.ajax({
-        url: 'http://localhost:8000/vmc/ajax/vms',
+        url: '/vmc/ajax/vms',
         dataType: 'json',
         headers: {
             'Access-Control-Allow-Origin': '*',
@@ -23,6 +23,11 @@ function getAllVm() {
     });
 }
 
+function onclickSuspend(vmId) {
+    this.parentNode.removeChild(this);
+    suspendVM(vmId);
+}
+
 /**
  * 
  * @param {*} status <on/off/suspend>.
@@ -36,22 +41,20 @@ function powerVM(id, status) {
         status = 'on';
     }
     $.ajax({
-        url: 'http://localhost:8000/vmc/ajax/vmpower/' + id + '/' + status,
+        url: '/vmc/ajax/vmpower/' + id + '/' + status,
         dataType: 'json',
         headers: {
             'Access-Control-Allow-Origin': '*',
         },
         success: function (data) {
             if (data.returncode == 0) {
+                document.getElementById('big-vm-stat-' + data.vmid).innerHTML = data.status;
                 document.getElementById('vm-stat-' + data.vmid).innerHTML = data.status;
                 if (data.status == 'on') {
                     var suspendButtonElement = document.createElement('button');
                     suspendButtonElement.innerHTML = "suspend";
                     suspendButtonElement.id = "suspend-" + data.vmid;
-                    suspendButtonElement.onclick = function() {
-                        this.parentNode.removeChild(this);
-                        suspendVM(data.vmid);
-                    };
+                    suspendButtonElement.onclick = function() { onclickSuspend(data.vmid) };
                     document.getElementById('vm-' + data.vmid).appendChild(suspendButtonElement);
                 }
                 else {
@@ -73,7 +76,7 @@ function powerVM(id, status) {
  */
 function suspendVM(id) {
     $.ajax({
-        url: 'http://localhost:8000/vmc/ajax/vmpower/' + id + '/suspend',
+        url: '/vmc/ajax/vmpower/' + id + '/suspend',
         dataType: 'json',
         headers: {
             'Access-Control-Allow-Origin': '*',
@@ -89,4 +92,8 @@ function suspendVM(id) {
         }
     });
     document.getElementById('vm-stat-' + id).innerHTML = "";
+}
+
+function goToDetailPage(vmId) {
+    window.location.href = '/vmc/detail/' + vmId;
 }
