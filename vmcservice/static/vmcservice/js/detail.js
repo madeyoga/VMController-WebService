@@ -17,14 +17,17 @@
             if (data.returncode == 0) {
                 ipAddress.innerHTML = data.ipaddress;
 
-                diskLabel = document.getElementById('disk-label');
-                memoLabel = document.getElementById('memo-label');
+                diskLabel = document.getElementById('disk-value');
+                memoLabel = document.getElementById('memo-value');
 
-                diskLabel.innerHTML = "Disk Space Usage: " + data.used_disk + "/" + data.total_disk 
-                memoLabel.innerHTML = "Memory Usage: " + data.used_memory + "MB/" + data.total_memory + "MB"
+                diskLabel.innerHTML = data.used_disk + "/" + data.total_disk 
+                memoLabel.innerHTML = data.used_memory + "MB/" + data.total_memory + "MB"
+                
+                // usedDisk = parseFloat(data.total_disk) - parseFloat(data.available_disk)
+                usedMemory = parseFloat(data.total_memory) - parseFloat(data.available_memory)
 
                 diskPercentage = Math.floor((parseFloat(data.used_disk) / parseFloat(data.total_disk)) * 100)
-                memoPercentage = Math.floor((parseFloat(data.used_memory) / parseFloat(data.total_memory)) * 100)
+                memoPercentage = Math.floor(usedMemory / parseFloat(data.total_memory) * 100) 
 
                 diskElement = document.getElementById('disk-usage');
                 diskElement.style.width = diskPercentage + "%";
@@ -130,4 +133,58 @@ function runScript(vmid) {
             }
         }
     })
+}
+
+function powerOnVM(vmId) {
+    $(':button').prop('disabled', true); // Disable all the buttons
+    $.ajax({
+        url: '/vmc/ajax/vmpower/' + vmId + '/on',
+        dataType: 'json',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+        success: function (data) {
+            console.log(data);
+            vmStatusElement = document.getElementById('vm-status');
+            vmStatusElement.className = 'text-success';
+            vmStatusElement.innerHTML = "Online";
+            $(':button').prop('disabled', false); // Enable all the button
+        }
+    });
+}
+
+function powerOffVM(vmId) {
+    $(':button').prop('disabled', true); // Disable all the buttons
+    $.ajax({
+        url: '/vmc/ajax/vmpower/' + vmId + '/off',
+        dataType: 'json',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+        success: function (data) {
+            console.log(data);
+            vmStatusElement = document.getElementById('vm-status');
+            vmStatusElement.className = 'text-danger';
+            vmStatusElement.innerHTML = "Offline";
+            $(':button').prop('disabled', false); // Enable all the button
+        }
+    });
+}
+
+function suspendVM(vmId) {
+    $(':button').prop('disabled', false); // Enable all the button
+    $.ajax({
+        url: '/vmc/ajax/vmpower/' + vmId + '/suspend',
+        dataType: 'json',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+        success: function (data) {
+            console.log(data);
+            vmStatusElement = document.getElementById('vm-status');
+            vmStatusElement.className = 'text-warning';
+            vmStatusElement.innerHTML = "Suspended";
+            $(':button').prop('disabled', false); // Enable all the button
+        }
+    });
 }
