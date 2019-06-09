@@ -29,7 +29,7 @@ Quit the server with CTRL-BREAK.
 - Open browser & go to `localhost:8000/admin`. 
 - Login & open `Virtual Machines` table.
 
-`User` has 1 to many relation with Virtual Machine table. so, 1 user owned many Virtual Machine & 1 Virtual Machine Owned by only 1 User.
+`User` has 1 to many relation with Virtual Machine table. so, 1 user can own many Virtual-Machines & 1 Virtual Machine Owned by only 1 User.
 you have to create a new Virtual Machine & assign it to a specific user.
 
 - Add new Virtual Machine. or edit the existing one.
