@@ -7,8 +7,8 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 	
 	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'vmcservice/css/detail.css' %}">
 	<link rel="stylesheet" href="{% static 'vmcservice/css/styles.css' %}">
-
 	<link rel='stylesheet' href="{% static 'vmcservice/css/prism.css' %}">
 
 </head>
@@ -120,6 +120,26 @@
 									100%
 								</div>
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="content">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Connect Via NoVNC
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-sm-3">
+							<input class="form-control m-4" id='novnc-port' type="text" placeholder="novnc url">
+						</div>
+						<div class="col-sm-9 m-4">
+							<button class="btn btn-success m-4" onclick="onclickConnect()">Connect</button>
+						</div>
+						<div class="col-sm-12">
+							<iframe class="m-4" id='novnc-element'></iframe>
 						</div>
 					</div>
 				</div>

@@ -81,6 +81,12 @@ def vmpower(request, vm_id, todo):
         # Update virtual machine status in database
         vm.status = todo
         vm.save()
+    elif output.returncode == 1 and todo == 'off':
+        vm.status = todo
+        vm.save()
+    elif output.returncode == 1 and todo == 'on':
+        vm.status = todo
+        vm.save()
 
     data = {
         'vmid'   : vm.id,

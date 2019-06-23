@@ -1,3 +1,5 @@
+
+ 
  /**
   * 
   * @param {*} vmId | 
@@ -19,7 +21,7 @@
 
                 diskLabel = document.getElementById('disk-value');
                 memoLabel = document.getElementById('memo-value');
-
+                
                 diskLabel.innerHTML = data.used_disk + "/" + data.total_disk 
                 memoLabel.innerHTML = data.used_memory + "MB/" + data.total_memory + "MB"
                 
@@ -37,7 +39,6 @@
                 memoElement.style.width = memoPercentage + "%";
                 memoElement.innerHTML = memoPercentage + "%";
                 
-                
                 if (diskPercentage < 50) {
                     diskElement.className = "progress-bar progress-bar-success";
                 } else if (diskPercentage < 80) {
@@ -53,6 +54,7 @@
                 } else {
                     memoElement.className = "progress-bar progress-bar-danger";
                 }
+
             }
             else {
                 alert(data.stderr);
@@ -187,4 +189,16 @@ function suspendVM(vmId) {
             $(':button').prop('disabled', false); // Enable all the button
         }
     });
+}
+
+function onclickConnect() {
+    // vmIpAddress = ipAddress.innerHTML;
+    // novncPort = document.getElementById('novnc-port').value;
+    // novncElement = document.getElementById('novnc-element');
+    // novncElement.src = "https://" + vmIpAddress + ":" + novncPort + "/vnc.html";
+    
+    // assuming novncPort was url field.
+    novncPort = document.getElementById('novnc-port').value;
+    document.getElementById('novnc-element').src = novncPort;
+
 }
