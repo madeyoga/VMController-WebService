@@ -8,6 +8,9 @@ Automate virtual machine operations and manipulate files within guest operating 
 - VIX API
 - Installed Virtual Machines.
 
+## App template
+<img style="width: 70%; height: 70%" src="https://raw.githubusercontent.com/madeyoga/VMController-WebService/master/Output/chrome_2020-08-12_12-49-57.png">
+
 ## Getting started
 - Clone Project.
 ```
